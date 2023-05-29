@@ -8,9 +8,11 @@ public class Fish : MonoBehaviour
     public float speed;
     //[SerializeField]
     //private float _speed;
-    float angle;
-    float maxAngle;
-    float minAngle;
+    int angle;
+    int maxAngle = 20;
+    int minAngle = -60;
+    public Score score;
+    public GameManager manager;
     
     void Start()
     {
@@ -19,9 +21,9 @@ public class Fish : MonoBehaviour
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && GameManager.gameOver==false )
         {
             _rb.velocity = new Vector2(_rb.velocity.x, speed);
         }
@@ -40,5 +42,33 @@ public class Fish : MonoBehaviour
             }
         }
         transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Score"))
+        {
+            score.Scored();
+        }
+        else if (collision.CompareTag("Colum"))
+        {
+            manager.GameOver();
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            if (GameManager.gameOver==false)
+            {
+                manager.GameOver();
+
+            }
+            else
+            {
+                manager.GameOver();
+
+            }
+        }
     }
 }
